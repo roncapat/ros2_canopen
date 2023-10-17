@@ -63,6 +63,7 @@ public:
     this->declare_parameter<std::string>("master_config", "");
     this->declare_parameter<std::string>("bus_config", "");
     this->declare_parameter<std::string>("master_bin", "");
+    this->declare_parameter<std::string>("can_ns", "");
     client_cbg_ = this->create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
     init_driver_service_ = this->create_service<canopen_interfaces::srv::CONode>(
       "~/init_driver",
@@ -96,10 +97,12 @@ public:
    * @param master_config
    * @param bus_config
    * @param master_bin
+   * @param can_ns
    */
   void init(
     const std::string & can_interface_name, const std::string & master_config,
-    const std::string & bus_config, const std::string & master_bin = "");
+    const std::string & bus_config, const std::string & master_bin = "",
+    const std::string & can_ns = "");
 
   virtual void configure();
   /**
@@ -279,6 +282,7 @@ protected:
   std::string bus_config_;          ///< Cached value of bus.yml file parameter
   std::string dcf_bin_;             ///< Cached value of .bin file parameter
   std::string can_interface_name_;  ///< Cached value of can interface name
+  std::string can_ns_; 
   bool lifecycle_operation_;
 
   // ROS Objects

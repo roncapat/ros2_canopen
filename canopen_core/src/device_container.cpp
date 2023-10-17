@@ -49,16 +49,19 @@ bool DeviceContainer::load_component(
       opts.use_global_arguments(false);
       opts.use_intra_process_comms(true);
       std::vector<std::string> remap_rules;
-      remap_rules.push_back("--ros-args");
-      remap_rules.push_back("-r");
+
       std::string can_ns = this->get_parameter("can_ns").as_string();
-      remap_rules.push_back("__ns:=" + can_ns);
+      if (!can_ns.empty()) {
+        remap_rules.push_back("--ros-args");
+        remap_rules.push_back("-r");
+        remap_rules.push_back("__ns:=" + can_ns);
+      }
       remap_rules.push_back("--ros-args");
       // remap_rules.push_back("--log-level");
       // remap_rules.push_back("debug");
       remap_rules.push_back("-r");
       remap_rules.push_back("__node:=" + node_name);
-      RCLCPP_INFO(this->get_logger(), "Hello from component loader: %s", can_ns.c_str());
+      RCLCPP_INFO(this->get_logger(), "Hello! from component loader: %s", can_ns.c_str());
 
 
       opts.arguments(remap_rules);

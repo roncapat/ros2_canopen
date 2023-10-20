@@ -782,7 +782,7 @@ public:
     }
     if (!is_tpdo)
     {
-      if (sync_sdo_read_typed<T>(index, subindex, value, std::chrono::milliseconds(20)))
+      if (sync_sdo_read_typed<T>(index, subindex, value, std::chrono::milliseconds(100)))
       {
         return value;
       }

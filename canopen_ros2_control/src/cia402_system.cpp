@@ -309,6 +309,7 @@ hardware_interface::return_type Cia402System::write(
       case MotorBase::Profiled_Position:
       case MotorBase::Cyclic_Synchronous_Position:
       case MotorBase::Interpolated_Position:
+        RCLCPP_INFO(kLogger, "set position target %d, %f", it->first, motor_data_[it->first].target.position_value);
         motion_controller_driver->set_target(motor_data_[it->first].target.position_value);
         break;
       case MotorBase::Profiled_Velocity:

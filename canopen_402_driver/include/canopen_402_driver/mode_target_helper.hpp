@@ -77,6 +77,7 @@ public:
       return false;
     }
 
+    std::cout << "canopen_402 target set" << std::endl;
     has_target_ = true;
     return true;
   }

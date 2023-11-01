@@ -686,7 +686,7 @@ bool NodeCanopen402Driver<NODETYPE>::set_target(double target)
     {
       scaled_target = target;
     }
-    // RCLCPP_INFO(this->node_->get_logger(), "Scaled target %f", scaled_target);
+    RCLCPP_INFO(this->node_->get_logger(), "Scaled target %f", scaled_target);
     return motor_->setTarget(scaled_target);
   }
   else

@@ -148,6 +148,10 @@ void NodeCanopenBaseDriver<NODETYPE>::activate(bool called_from_base)
 {
   nmt_state_publisher_thread_ =
     std::thread(std::bind(&NodeCanopenBaseDriver<NODETYPE>::nmt_listener, this));
+
+  rpdo_publisher_thread_ =
+    std::thread(std::bind(&NodeCanopenBaseDriver<NODETYPE>::rdpo_listener, this));
+
   emcy_queue_ = this->lely_driver_->get_emcy_queue();
   rpdo_queue_ = this->lely_driver_->get_rpdo_queue();
   if (polling_)

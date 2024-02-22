@@ -412,7 +412,7 @@ bool Motor402::handleShutdown()
   switchMode(MotorBase::No_Mode);
   return switchState(State402::Switch_On_Disabled);
 }
-bool Motor402::handleHalt()
+bool Motor402::handleQuickstop()
 {
   State402::InternalState state = state_handler_.getState();
   std::scoped_lock lock(cw_mutex_);

@@ -119,7 +119,7 @@ public:
    * The function executes a quickstop.
    *
    */
-  bool handleHalt();
+  bool handleQuickstop();
 
   /**
    * @brief Recovers the device from fault

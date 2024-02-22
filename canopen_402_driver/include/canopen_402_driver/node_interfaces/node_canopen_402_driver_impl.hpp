@@ -51,10 +51,10 @@ void NodeCanopen402Driver<rclcpp::Node>::init(bool called_from_base)
       &NodeCanopen402Driver<rclcpp::Node>::handle_init, this, std::placeholders::_1,
       std::placeholders::_2));
 
-  handle_halt_service = this->node_->create_service<std_srvs::srv::Trigger>(
-    std::string(this->node_->get_name()).append("/halt").c_str(),
+  handle_quickstop_service = this->node_->create_service<std_srvs::srv::Trigger>(
+    std::string(this->node_->get_name()).append("/quickstop").c_str(),
     std::bind(
-      &NodeCanopen402Driver<rclcpp::Node>::handle_halt, this, std::placeholders::_1,
+      &NodeCanopen402Driver<rclcpp::Node>::handle_quickstop, this, std::placeholders::_1,
       std::placeholders::_2));
 
   handle_recover_service = this->node_->create_service<std_srvs::srv::Trigger>(
@@ -119,10 +119,10 @@ void NodeCanopen402Driver<rclcpp_lifecycle::LifecycleNode>::init(bool called_fro
       &NodeCanopen402Driver<rclcpp_lifecycle::LifecycleNode>::handle_init, this,
       std::placeholders::_1, std::placeholders::_2));
 
-  handle_halt_service = this->node_->create_service<std_srvs::srv::Trigger>(
-    std::string(this->node_->get_name()).append("/halt").c_str(),
+  handle_quickstop_service = this->node_->create_service<std_srvs::srv::Trigger>(
+    std::string(this->node_->get_name()).append("/quickstop").c_str(),
     std::bind(
-      &NodeCanopen402Driver<rclcpp_lifecycle::LifecycleNode>::handle_halt, this,
+      &NodeCanopen402Driver<rclcpp_lifecycle::LifecycleNode>::handle_quickstop, this,
       std::placeholders::_1, std::placeholders::_2));
 
   handle_recover_service = this->node_->create_service<std_srvs::srv::Trigger>(
@@ -357,13 +357,13 @@ void NodeCanopen402Driver<NODETYPE>::handle_recover(
   }
 }
 template <class NODETYPE>
-void NodeCanopen402Driver<NODETYPE>::handle_halt(
+void NodeCanopen402Driver<NODETYPE>::handle_quickstop(
   const std_srvs::srv::Trigger::Request::SharedPtr request,
   std_srvs::srv::Trigger::Response::SharedPtr response)
 {
   if (this->activated_.load())
   {
-    response->success = motor_->handleHalt();
+    response->success = motor_->handleQuickstop();
   }
 }
 template <class NODETYPE>
@@ -472,11 +472,11 @@ bool NodeCanopen402Driver<NODETYPE>::recover_motor()
 }
 
 template <class NODETYPE>
-bool NodeCanopen402Driver<NODETYPE>::halt_motor()
+bool NodeCanopen402Driver<NODETYPE>::quickstop_motor()
 {
   if (this->activated_.load())
   {
-    return motor_->handleHalt();
+    return motor_->handleQuickstop();
   }
   else
   {

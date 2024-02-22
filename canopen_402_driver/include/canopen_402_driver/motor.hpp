@@ -113,6 +113,15 @@ public:
    *
    */
   bool handleShutdown();
+  
+   /**
+   * @brief Executes a halt
+   *
+   * The function executes a halt.
+   *
+   */
+  bool handleHalt();
+
   /**
    * @brief Executes a quickstop
    *

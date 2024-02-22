@@ -257,21 +257,21 @@ void Motor402::handleWrite()
   std::scoped_lock lock(cw_mutex_);
   if (state_handler_.getState() == State402::Operation_Enable)
   {
-    std::scoped_lock lock(mode_mutex_);
-    Mode::OpModeAccesser cwa(control_word_);
-    bool okay = false;
-    if (selected_mode_ && selected_mode_->mode_id_ == mode_id_)
-    {
-      okay = selected_mode_->write(cwa);
-    }
-    else
-    {
-      cwa = 0;
-    }
-    if (!okay)
-    {
-      control_word_ |= (1 << Command402::CW_Halt);
-    }
+    // std::scoped_lock lock(mode_mutex_);
+    // Mode::OpModeAccesser cwa(control_word_);
+    // bool okay = false;
+    // if (selected_mode_ && selected_mode_->mode_id_ == mode_id_)
+    // {
+    //   okay = selected_mode_->write(cwa);
+    // }
+    // else
+    // {
+    //   cwa = 0;
+    // }
+    // if (!okay)
+    // {
+    //   control_word_ |= (1 << Command402::CW_Halt);
+    // }
   }
   if (start_fault_reset_.exchange(false))
   {

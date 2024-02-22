@@ -45,6 +45,7 @@ protected:
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_enable_service;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_disable_service;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_halt_service;
+  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_quickstop_service;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_recover_service;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_set_mode_position_service;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_set_mode_torque_service;
@@ -160,9 +161,9 @@ public:
   /**
    * @brief Service Callback to halt device
    *
-   * Calls Motor402::handleHalt function. Calls Quickstop. Resulting
+   * Calls Motor402::handleHalt function. Calls Halt. Resulting
    * Motor state depends on devices configuration specifically object
-   * 0x605A.
+   * 0x605D.
    *
    * @param [in] request
    * @param [out] response
@@ -174,7 +175,34 @@ public:
   /**
    * @brief Method to halt device
    *
-   * Calls Motor402::handleHalt function. Calls Quickstop. Resulting
+   * Calls Motor402::handleHalt function. Calls Halt. Resulting
+   * Motor state depends on devices configuration specifically object
+   * 0x605D.
+   *
+   * @param [in] void
+   *
+   * @return bool
+   */
+  bool halt_motor();
+
+  /**
+   * @brief Service Callback to quickstop device
+   *
+   * Calls Motor402::handleQuickstop function. Calls Quickstop. Resulting
+   * Motor state depends on devices configuration specifically object
+   * 0x605A.
+   *
+   * @param [in] request
+   * @param [out] response
+   */
+  void handle_quickstop(
+    const std_srvs::srv::Trigger::Request::SharedPtr request,
+    std_srvs::srv::Trigger::Response::SharedPtr response);
+
+  /**
+   * @brief Method to quickstop device
+   *
+   * Calls Motor402::handleQuickstop function. Calls Quickstop. Resulting
    * Motor state depends on devices configuration specifically object
    * 0x605A.
    *
@@ -182,7 +210,7 @@ public:
    *
    * @return bool
    */
-  bool halt_motor();
+  bool quickstop_motor();
 
   /**
    * @brief Service Callback to set profiled position mode

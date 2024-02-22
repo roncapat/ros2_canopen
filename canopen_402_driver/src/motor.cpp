@@ -255,7 +255,6 @@ void Motor402::handleRead() { readState(); }
 void Motor402::handleWrite()
 {
   std::scoped_lock lock(cw_mutex_);
-  control_word_ |= (1 << Command402::CW_Halt);
   if (state_handler_.getState() == State402::Operation_Enable)
   {
     std::scoped_lock lock(mode_mutex_);
@@ -269,9 +268,9 @@ void Motor402::handleWrite()
     {
       cwa = 0;
     }
-    if (okay)
+    if (!okay)
     {
-      control_word_ &= ~(1 << Command402::CW_Halt);
+      control_word_ |= (1 << Command402::CW_Halt);
     }
   }
   if (start_fault_reset_.exchange(false))
@@ -413,6 +412,19 @@ bool Motor402::handleShutdown()
   return switchState(State402::Switch_On_Disabled);
 }
 bool Motor402::handleHalt()
+{
+  State402::InternalState state = state_handler_.getState();
+  std::scoped_lock lock(cw_mutex_);
+
+  // only demand halt if operation is enabled
+  if (state == State402::Operation_Enable)
+  {
+    control_word_ |= (1 << Command402::CW_Halt);
+    return true;
+  }
+  else return false;
+}
+bool Motor402::handleQuickstop()
 {
   State402::InternalState state = state_handler_.getState();
   std::scoped_lock lock(cw_mutex_);

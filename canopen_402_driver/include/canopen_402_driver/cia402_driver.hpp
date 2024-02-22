@@ -81,6 +81,8 @@ public:
 
   bool halt_motor() { return node_canopen_402_driver_->halt_motor(); }
 
+  bool quickstop_motor() { return node_canopen_402_driver_->quickstop_motor(); }
+
   bool set_mode_position() { return node_canopen_402_driver_->set_mode_position(); }
 
   bool set_mode_velocity() { return node_canopen_402_driver_->set_mode_velocity(); }

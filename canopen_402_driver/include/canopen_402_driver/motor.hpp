@@ -113,13 +113,22 @@ public:
    *
    */
   bool handleShutdown();
+  
+   /**
+   * @brief Executes a halt
+   *
+   * The function executes a halt.
+   *
+   */
+  bool handleHalt();
+
   /**
    * @brief Executes a quickstop
    *
    * The function executes a quickstop.
    *
    */
-  bool handleHalt();
+  bool handleQuickstop();
 
   /**
    * @brief Recovers the device from fault

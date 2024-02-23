@@ -69,6 +69,12 @@ void NodeCanopen402Driver<rclcpp::Node>::init(bool called_from_base)
       &NodeCanopen402Driver<rclcpp::Node>::handle_halt, this, std::placeholders::_1,
       std::placeholders::_2));
 
+  handle_unset_halt_service = this->node_->create_service<std_srvs::srv::Trigger>(
+    std::string(this->node_->get_name()).append("/unset_halt").c_str(),
+    std::bind(
+      &NodeCanopen402Driver<rclcpp::Node>::handle_unset_halt, this, std::placeholders::_1,
+      std::placeholders::_2));
+
   handle_quickstop_service = this->node_->create_service<std_srvs::srv::Trigger>(
     std::string(this->node_->get_name()).append("/quickstop").c_str(),
     std::bind(
@@ -408,6 +414,16 @@ void NodeCanopen402Driver<NODETYPE>::handle_recover(
   if (this->activated_.load())
   {
     response->success = motor_->handleRecover();
+  }
+}
+template <class NODETYPE>
+void NodeCanopen402Driver<NODETYPE>::handle_unset_halt(
+  const std_srvs::srv::Trigger::Request::SharedPtr request,
+  std_srvs::srv::Trigger::Response::SharedPtr response)
+{
+  if (this->activated_.load())
+  {
+    response->success = motor_->handleUnsetHalt();
   }
 }
 template <class NODETYPE>

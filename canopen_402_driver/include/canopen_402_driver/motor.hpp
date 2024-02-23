@@ -122,6 +122,14 @@ public:
    */
   bool handleHalt();
 
+   /**
+   * @brief Unpauses motion from a halt
+   *
+   * The function unpauses motion from a halt.
+   *
+   */
+  bool handleUnsetHalt();
+
   /**
    * @brief Executes a quickstop
    *

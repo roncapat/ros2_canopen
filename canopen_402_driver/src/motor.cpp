@@ -280,7 +280,7 @@ void Motor402::handleWrite()
     this->driver->universal_set_value<uint16_t>(
       control_word_entry_index, 0x0, control_word_ & ~(1 << Command402::CW_Fault_Reset));
   }
-  else if (start_halt_.exchange(false)) {
+  else if (start_halt_.load()) {
     RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Start halt");
     this->driver->universal_set_value<uint16_t>(control_word_entry_index, 0x0, 
       control_word_ | (1 << Command402::CW_Halt));
@@ -369,6 +369,7 @@ bool Motor402::handleInit()
   {
     std::scoped_lock lock(cw_mutex_);
     control_word_ = 0;
+    start_halt_ = false;
     start_fault_reset_ = true;
   }
   RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Init: Enable");
@@ -424,6 +425,17 @@ bool Motor402::handleHalt()
   if (state == State402::Operation_Enable)
   {
     start_halt_ = true;
+    return true;
+  }
+  else return false;
+}
+bool Motor402::handleUnsetHalt()
+{
+  State402::InternalState state = state_handler_.getState();
+  // only demand un-halt if operation is enabled
+  if (state == State402::Operation_Enable)
+  {
+    start_halt_ = false;
     return true;
   }
   else return false;

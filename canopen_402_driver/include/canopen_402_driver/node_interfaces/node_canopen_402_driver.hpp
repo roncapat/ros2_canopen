@@ -45,6 +45,7 @@ protected:
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_enable_service;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_disable_service;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_halt_service;
+  rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_unset_halt_service;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_quickstop_service;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_recover_service;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr handle_set_mode_position_service;
@@ -157,6 +158,33 @@ public:
    * @return bool
    */
   bool recover_motor();
+
+  /**
+   * @brief Service Callback to halt device
+   *
+   * Calls Motor402::handleHalt function. Calls Halt. Resulting
+   * Motor state depends on devices configuration specifically object
+   * 0x605D.
+   *
+   * @param [in] request
+   * @param [out] response
+   */
+  void handle_unset_halt(
+    const std_srvs::srv::Trigger::Request::SharedPtr request,
+    std_srvs::srv::Trigger::Response::SharedPtr response);
+
+  /**
+   * @brief Method to halt device
+   *
+   * Calls Motor402::handleHalt function. Calls Halt. Resulting
+   * Motor state depends on devices configuration specifically object
+   * 0x605D.
+   *
+   * @param [in] void
+   *
+   * @return bool
+   */
+  bool unset_halt_motor();
 
   /**
    * @brief Service Callback to halt device

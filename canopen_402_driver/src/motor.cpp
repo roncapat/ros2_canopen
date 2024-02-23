@@ -263,10 +263,12 @@ void Motor402::handleWrite()
     bool okay = false;
     if (selected_mode_ && selected_mode_->mode_id_ == mode_id_)
     {
+      RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Hit inside of selected_mode_ if statement.");
       okay = selected_mode_->write(cwa);
     }
     else
     {
+      RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Hit else case.");
       cwa = 0;
     }
     if (!okay)

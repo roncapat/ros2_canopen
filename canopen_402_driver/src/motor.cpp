@@ -282,8 +282,8 @@ void Motor402::handleWrite()
   }
   else
   {
-    RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Control Word %s"),
-    // std::bitset<16>{control_word_}.to_string());
+    RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Control Word %s",
+    std::bitset<16>{control_word_}.to_string());
     this->driver->universal_set_value<uint16_t>(control_word_entry_index, 0x0, control_word_);
   }
 }

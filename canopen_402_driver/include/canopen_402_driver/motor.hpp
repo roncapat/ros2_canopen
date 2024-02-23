@@ -229,6 +229,8 @@ private:
 
   State402 state_handler_;
 
+  std::atomic<bool> start_halt_;
+
   std::mutex map_mutex_;
   std::unordered_map<uint16_t, ModeSharedPtr> modes_;
   typedef std::function<void()> AllocFuncType;

@@ -255,7 +255,7 @@ void Motor402::handleRead() { readState(); }
 void Motor402::handleWrite()
 {
   std::scoped_lock lock(cw_mutex_);
-  control_word_ |= 1 << Command402::CW_Halt;
+  // control_word_ |= 1 << Command402::CW_Halt;
   if (state_handler_.getState() == State402::Operation_Enable)
   {
     std::scoped_lock lock(mode_mutex_);
@@ -269,9 +269,11 @@ void Motor402::handleWrite()
     {
       cwa = 0;
     }
-    if (okay)
+    if (!okay)
     {
-      control_word_ &= ~(1 << Command402::CW_Halt);
+      RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Hit !okay case");
+      control_word_ |= (1 << Command402::CW_Halt);
+      // control_word_ &= ~(1 << Command402::CW_Halt);
     }
   }
   if (start_fault_reset_.exchange(false))
@@ -282,8 +284,8 @@ void Motor402::handleWrite()
   }
   else
   {
-    RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Control Word %s",
-    std::bitset<16>{control_word_}.to_string());
+    // RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Control Word %s",
+    // std::bitset<16>{control_word_}.to_string());
     this->driver->universal_set_value<uint16_t>(control_word_entry_index, 0x0, control_word_);
   }
 }
@@ -420,6 +422,7 @@ bool Motor402::handleHalt()
   // only demand halt if operation is enabled
   if (state == State402::Operation_Enable)
   {
+    RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Received halt command.");
     control_word_ |= (1 << Command402::CW_Halt);
     return true;
   }

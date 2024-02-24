@@ -281,7 +281,6 @@ void Motor402::handleWrite()
       control_word_entry_index, 0x0, control_word_ & ~(1 << Command402::CW_Fault_Reset));
   }
   else if (start_halt_.load()) {
-    RCLCPP_INFO(rclcpp::get_logger("canopen_402_driver"), "Start halt");
     this->driver->universal_set_value<uint16_t>(control_word_entry_index, 0x0, 
       control_word_ | (1 << Command402::CW_Halt));
   } 

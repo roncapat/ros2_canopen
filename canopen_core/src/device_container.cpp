@@ -49,11 +49,20 @@ bool DeviceContainer::load_component(
       opts.use_global_arguments(false);
       opts.use_intra_process_comms(true);
       std::vector<std::string> remap_rules;
+
+      std::string can_ns = this->get_parameter("can_ns").as_string();
+      if (!can_ns.empty()) {
+        remap_rules.push_back("--ros-args");
+        remap_rules.push_back("-r");
+        remap_rules.push_back("__ns:=" + can_ns);
+      }
       remap_rules.push_back("--ros-args");
       // remap_rules.push_back("--log-level");
       // remap_rules.push_back("debug");
       remap_rules.push_back("-r");
       remap_rules.push_back("__node:=" + node_name);
+      RCLCPP_INFO(this->get_logger(), "Hello! from component loader: %s", can_ns.c_str());
+
 
       opts.arguments(remap_rules);
       opts.parameter_overrides(params);
@@ -178,6 +187,8 @@ void DeviceContainer::configure()
   RCLCPP_INFO(this->get_logger(), "\t master_config %s", dcf_txt_.c_str());
   RCLCPP_INFO(this->get_logger(), "\t bus_config %s", bus_config_.c_str());
   RCLCPP_INFO(this->get_logger(), "\t can_interface_name %s", can_interface_name_.c_str());
+  RCLCPP_INFO(this->get_logger(), "\t can_ns %s", can_ns_.c_str());
+
 
   try
   {
@@ -222,6 +233,7 @@ bool DeviceContainer::load_master()
       params.push_back(rclcpp::Parameter("master_dcf", this->dcf_txt_));
       params.push_back(rclcpp::Parameter("master_bin", this->dcf_bin_));
       params.push_back(rclcpp::Parameter("can_interface_name", this->can_interface_name_));
+      params.push_back(rclcpp::Parameter("can_ns", this->can_ns_));
       params.push_back(rclcpp::Parameter("node_id", (int)node_id.value()));
       params.push_back(rclcpp::Parameter("non_transmit_timeout", 100));
       params.push_back(rclcpp::Parameter("config", config_->dump_device(*it)));
@@ -362,17 +374,20 @@ void DeviceContainer::init()
 
 void DeviceContainer::init(
   const std::string & can_interface_name, const std::string & master_config,
-  const std::string & bus_config, const std::string & master_bin)
+  const std::string & bus_config, const std::string & master_bin,
+  const std::string & can_ns)
 {
   can_interface_name_ = can_interface_name;
   dcf_txt_ = master_config;
   dcf_bin_ = master_bin;
   bus_config_ = bus_config;
+  can_ns_ = can_ns;
 
   RCLCPP_INFO(this->get_logger(), "Starting Device Container with:");
   RCLCPP_INFO(this->get_logger(), "\t can_interface_name %s", can_interface_name_.c_str());
   RCLCPP_INFO(this->get_logger(), "\t master_config %s", dcf_txt_.c_str());
   RCLCPP_INFO(this->get_logger(), "\t bus_config %s", bus_config_.c_str());
+  RCLCPP_INFO(this->get_logger(), "\t can_ns %s", can_ns_.c_str());
 
   this->config_ = std::make_unique<ros2_canopen::ConfigurationManager>(bus_config_);
   this->config_->init_config();

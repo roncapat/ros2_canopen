@@ -50,7 +50,7 @@ bool DeviceContainer::load_component(
       opts.use_intra_process_comms(true);
       std::vector<std::string> remap_rules;
 
-      std::string can_ns = this->get_parameter("can_ns").as_string();
+      std::string can_ns = this->get_namespace();
       if (!can_ns.empty()) {
         remap_rules.push_back("--ros-args");
         remap_rules.push_back("-r");

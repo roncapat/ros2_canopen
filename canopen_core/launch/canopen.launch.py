@@ -85,7 +85,6 @@ def generate_launch_description():
             {"master_config": LaunchConfiguration("master_config")},
             {"master_bin": LaunchConfiguration("master_bin")},
             {"can_interface_name": LaunchConfiguration("can_interface_name")},
-            # {"can_ns": LaunchConfiguration("can_ns")}
         ],
     )
 

@@ -32,8 +32,6 @@ import lifecycle_msgs.msg
 
 def generate_launch_description():
 
-    can_ns = LaunchConfiguration("can_ns")
-
     bus_conf_arg = DeclareLaunchArgument(
         "bus_config",
         default_value=TextSubstitution(text=""),
@@ -52,12 +50,6 @@ def generate_launch_description():
         description="Path to the master configuration to use (bin).",
     )
 
-    namespace_arg = DeclareLaunchArgument(
-        "can_ns",
-        default_value=TextSubstitution(text=""),
-        description="Namespace to add to this launch."
-    )
-
     can_interface_name_arg = DeclareLaunchArgument(
         "can_interface_name",
         default_value=TextSubstitution(text="vcan0"),
@@ -71,12 +63,11 @@ def generate_launch_description():
             launch.actions.LogInfo(msg=LaunchConfiguration("master_config")),
             launch.actions.LogInfo(msg=LaunchConfiguration("master_bin")),
             launch.actions.LogInfo(msg=LaunchConfiguration("can_interface_name")),
-            launch.actions.LogInfo(msg=LaunchConfiguration("can_ns")),
         ]
     )
     lifecycle_device_container_node = launch_ros.actions.LifecycleNode(
         name="device_container_node",
-        namespace=can_ns,
+        namespace="",
         package="canopen_core",
         output="screen",
         executable="device_container_node",
@@ -85,13 +76,11 @@ def generate_launch_description():
             {"master_config": LaunchConfiguration("master_config")},
             {"master_bin": LaunchConfiguration("master_bin")},
             {"can_interface_name": LaunchConfiguration("can_interface_name")},
-            # {"can_ns": LaunchConfiguration("can_ns")}
         ],
     )
 
     ld.add_action(bus_conf_arg)
     ld.add_action(master_conf_arg)
-    ld.add_action(namespace_arg)
     ld.add_action(master_bin_arg)
     ld.add_action(can_interface_name_arg)
     ld.add_action(logging)
